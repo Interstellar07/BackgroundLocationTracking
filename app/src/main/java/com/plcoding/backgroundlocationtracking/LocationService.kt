@@ -8,6 +8,9 @@ import android.os.IBinder
 import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.google.android.gms.location.LocationServices
+import com.google.firebase.Firebase
+import com.google.firebase.FirebaseApp
+import com.google.firebase.database.database
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -27,6 +30,7 @@ class LocationService: Service() {
 
     override fun onCreate() {
         super.onCreate()
+        FirebaseApp.initializeApp(this)
         locationClient = DefaultLocationClient(
             applicationContext,
             LocationServices.getFusedLocationProviderClient(applicationContext)
@@ -42,6 +46,7 @@ class LocationService: Service() {
     }
 
     private fun start() {
+        Firebase.database.getReference("Status").setValue("Active")
         val notification = NotificationCompat.Builder(this, "location")
             .setContentTitle("Tracking location...")
             .setContentText("Location: null")
@@ -51,14 +56,18 @@ class LocationService: Service() {
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
         locationClient
-            .getLocationUpdates(50000L)
+            .getLocationUpdates(10000L)
             .catch { e -> e.printStackTrace() }
             .onEach { location ->
+                val database = Firebase.database
+                val myRef = database.getReference("User1")
+                myRef.child("Latitude").setValue(location.latitude.toString())
+                myRef.child("Longitude").setValue(location.longitude.toString())
                 Log.d("Location",location.latitude.toString())
                 Log.d("Location",location.longitude.toString())
 
-                val lat = location.latitude.toString().takeLast(3)
-                val long = location.longitude.toString().takeLast(3)
+                val lat = location.latitude.toString()
+                val long = location.longitude.toString()
                 val updatedNotification = notification.setContentText(
                     "Location: ($lat, $long)"
                 )
@@ -70,6 +79,7 @@ class LocationService: Service() {
     }
 
     private fun stop() {
+        Firebase.database.getReference("Status").setValue("Inactive")
         stopForeground(true)
         stopSelf()
     }
