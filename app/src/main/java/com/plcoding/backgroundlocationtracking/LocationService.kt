@@ -3,7 +3,9 @@ package com.plcoding.backgroundlocationtracking
 import android.app.NotificationManager
 import android.app.Service
 import android.content.Context
+import android.provider.Settings
 import android.content.Intent
+
 import android.os.IBinder
 import android.util.Log
 import androidx.core.app.NotificationCompat
@@ -16,6 +18,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.flow.catch
+
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 
@@ -46,7 +49,8 @@ class LocationService: Service() {
     }
 
     private fun start() {
-        Firebase.database.getReference("Status").setValue("Active")
+        val ID = Settings.Secure.getString(this.contentResolver, Settings.Secure.ANDROID_ID)
+        Firebase.database.getReference("Users").child(ID).child("Status").setValue("Active")
         val notification = NotificationCompat.Builder(this, "location")
             .setContentTitle("Tracking location...")
             .setContentText("Location: null")
@@ -60,9 +64,8 @@ class LocationService: Service() {
             .catch { e -> e.printStackTrace() }
             .onEach { location ->
                 val database = Firebase.database
-                val myRef = database.getReference("User1")
-                myRef.child("Latitude").setValue(location.latitude.toString())
-                myRef.child("Longitude").setValue(location.longitude.toString())
+                val myRef = database.getReference("Users").child(ID)
+                myRef.child("Position").setValue(location.latitude.toString()+ "@"+location.longitude.toString())
                 Log.d("Location",location.latitude.toString())
                 Log.d("Location",location.longitude.toString())
 
@@ -79,7 +82,8 @@ class LocationService: Service() {
     }
 
     private fun stop() {
-        Firebase.database.getReference("Status").setValue("Inactive")
+        val ID = Settings.Secure.getString(this.contentResolver, Settings.Secure.ANDROID_ID)
+        Firebase.database.getReference("Users").child(ID).child("Status").setValue("Inactive")
         stopForeground(true)
         stopSelf()
     }
