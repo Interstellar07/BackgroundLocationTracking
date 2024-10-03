@@ -1,0 +1,49 @@
+{
+  "project_info": {
+    "project_number": "313455276755",
+    "firebase_url": "https://projectsafeuser-default-rtdb.firebaseio.com",
+    "project_id": "projectsafeuser",
+    "storage_bucket": "projectsafeuser.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:313455276755:android:3c1f17121a276c97699a26",
+        "android_client_info": {
+          "package_name": "com.plcoding.backgroundlocationtracking"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBCxp3pk_33uEFseXY5yBjH1X0YgJFWpkQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:313455276755:android:f34dad398b103932699a26",
+        "android_client_info": {
+          "package_name": "com.sameer.projectsafepublic"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBCxp3pk_33uEFseXY5yBjH1X0YgJFWpkQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
